@@ -1,15 +1,27 @@
 {
   "name": "auth-inbox",
-  "version": "0.0.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "build:web": "pnpm -C web run build",
     "dev:web": "pnpm -C web run dev",
-    "deploy": "pnpm run build:web && wrangler deploy",
+    "deploy": "pnpm run build:web && pnpm run db:migrate:remote && wrangler deploy",
     "dev": "wrangler dev",
     "start": "wrangler dev",
     "test": "vitest",
-    "cf-typegen": "wrangler types"
+    "test:mail": "vitest run --config vitest.mail.config.mts",
+    "test:eval": "EVAL_LLM=1 vitest run --config vitest.mail.config.mts",
+    "fixtures:pull": "node scripts/pull-fixtures.mjs",
+    "cf-typegen": "wrangler types",
+    "db:migrate:local": "wrangler d1 migrations apply inbox-d1 --local",
+    "db:migrate:remote": "wrangler d1 migrations apply inbox-d1 --remote"
+  },
+  "dependencies": {
+    "@cloudflare/workers-oauth-provider": "^0.8.1",
+    "@hono/mcp": "^0.1.4",
+    "@modelcontextprotocol/sdk": "^1.17.0",
+    "hono": "^4.9.0",
+    "zod": "^3.25.0"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.5.2",
@@ -18,5 +30,7 @@
     "vitest": "2.0.5",
     "wrangler": "^4.73.0"
   },
-  "packageManager": "pnpm@10.32.1+sha512.a706938f0e89ac1456b6563eab4edf1d1faf3368d1191fc5c59790e96dc918e4456ab2e67d613de1043d2e8c81f87303e6b40d4ffeca9df15ef1ad567348f2be"
+  "packageManager": "pnpm@10.32.1",
+  "description": "Self-hosted email verification code platform on Cloudflare Workers — Hono, multi-user grants, remote MCP server for AI agents.",
+  "license": "MIT"
 }

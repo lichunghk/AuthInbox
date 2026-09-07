@@ -29,12 +29,14 @@ class RPCEmailMessage implements ForwardableEmailMessage {
         console.log(`rpcEmail default implementation: Message rejected: ${reason}`);
     }
 
-    async forward(rcptTo: string, headers: Headers = new Headers()): Promise<void> {
+    async forward(rcptTo: string, headers: Headers = new Headers()): Promise<EmailSendResult> {
         console.log(`rpcEmail default implementation: Forwarding message to: ${rcptTo}, with headers:`, headers);
+        return { success: true, messageId: "" } as EmailSendResult;
     }
 
-    async reply(message: EmailMessage): Promise<void> {
+    async reply(message: EmailMessage): Promise<EmailSendResult> {
         console.log(`rpcEmail default implementation: Replying to: ${message}`);
+        return { success: true, messageId: "" } as EmailSendResult;
     }
 }
 
